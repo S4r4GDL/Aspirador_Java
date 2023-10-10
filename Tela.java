@@ -39,8 +39,7 @@ public class Tela extends JFrame {
     }
 
     public void criarAspirador(int x, int y) {
-        JLabel aspiradorLabel = new JLabel(aspiradorIcon);
-        ambienteLabels[x][y].add(aspiradorLabel);
+        ambienteLabels[x][y].setIcon(aspiradorIcon);
     }
 
     public void montaFrame(String local, JPanel panel) {
