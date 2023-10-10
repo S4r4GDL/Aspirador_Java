@@ -1,24 +1,22 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.Random;
 
 public class Tela extends JFrame {
     JPanel espacoPanel;
     final int LINHAS = 5;
     ImageIcon sujeiraIcon = new ImageIcon("sujeira.png");
     ImageIcon chaoLimpoIcon = new ImageIcon("chaoLimpo.png");
-    ImageIcon aspiradorIcon = new ImageIcon("aspirador.png");
+
     JLabel[][] ambienteLabels;
 
     public Tela() throws IOException {
         setLayout(new BorderLayout());
         espacoPanel = new JPanel(new GridLayout(LINHAS, LINHAS));
         criarEspaco();
-        criarAspirador(0,0);
-        sujar(1, 3);
-        sujar(4, 2);
-        sujar(0, 1);
-        sujar(2, 0);
+        colocaAspirador(0,0, );
+        sujar(5);
         montaFrame("West", espacoPanel);
 
         mostraTela();
@@ -38,7 +36,7 @@ public class Tela extends JFrame {
         }
     }
 
-    public void criarAspirador(int x, int y) {
+    public void colocaAspirador(int x, int y) {
         ambienteLabels[x][y].setIcon(aspiradorIcon);
     }
 
@@ -46,8 +44,15 @@ public class Tela extends JFrame {
         getContentPane().add(local, panel);
     }
 
-    public void sujar(int x, int y) {
-        ambienteLabels[x][y].setIcon(sujeiraIcon);
+    public void sujar(int qt) {
+        Random aleatorio = new Random();
+        int x, y;
+        for (int i = 0; i <= qt; i++) {
+            x = aleatorio.nextInt(qt);
+            y = aleatorio.nextInt(qt);
+            ambienteLabels[x][y].setIcon(aspirador.getIc());
+        }
+
     }
 
     public void mostraTela() {
