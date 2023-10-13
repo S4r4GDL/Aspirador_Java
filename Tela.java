@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.Random;
 
 public class Tela extends JFrame {
+    private static final int COLUNAS = 4;
+    private static final int LINHAS = 5;
     JPanel espacoPanel;
-    final int LINHAS = 5;
+
     ImageIcon sujeiraIcon = new ImageIcon("sujeira.png");
     ImageIcon chaoLimpoIcon = new ImageIcon("chaoLimpo.png");
 
@@ -15,8 +17,6 @@ public class Tela extends JFrame {
         setLayout(new BorderLayout());
         espacoPanel = new JPanel(new GridLayout(LINHAS, LINHAS));
         criarEspaco();
-        colocaAspirador(0,0, );
-        sujar(5);
         montaFrame("West", espacoPanel);
 
         mostraTela();
@@ -36,23 +36,12 @@ public class Tela extends JFrame {
         }
     }
 
-    public void colocaAspirador(int x, int y) {
-        ambienteLabels[x][y].setIcon(aspiradorIcon);
+    public void colocar(int x, int y, ImageIcon imagem) {
+        ambienteLabels[x][y].setIcon(imagem);
     }
 
     public void montaFrame(String local, JPanel panel) {
         getContentPane().add(local, panel);
-    }
-
-    public void sujar(int qt) {
-        Random aleatorio = new Random();
-        int x, y;
-        for (int i = 0; i <= qt; i++) {
-            x = aleatorio.nextInt(qt);
-            y = aleatorio.nextInt(qt);
-            ambienteLabels[x][y].setIcon(aspirador.getIc());
-        }
-
     }
 
     public void mostraTela() {
@@ -62,5 +51,13 @@ public class Tela extends JFrame {
         setVisible(true);
     }
 
+    public ImageIcon getSujeiraIcon() {
+        return sujeiraIcon;
+    }
 
+    public int getLimiteDeIndex() {
+        if(LINHAS > COLUNAS)
+            return LINHAS;
+        return COLUNAS;
+    }
 }
