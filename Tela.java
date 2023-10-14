@@ -1,17 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.Random;
 
 public class Tela extends JFrame {
     private static final int COLUNAS = 4;
+
+
     private static final int LINHAS = 5;
     JPanel espacoPanel;
 
     ImageIcon sujeiraIcon = new ImageIcon("sujeira.png");
     ImageIcon chaoLimpoIcon = new ImageIcon("chaoLimpo.png");
 
-    JLabel[][] ambienteLabels;
+    JLabel[][] ambiente;
 
     public Tela() throws IOException {
         setLayout(new BorderLayout());
@@ -23,21 +24,34 @@ public class Tela extends JFrame {
     }
 
     public void criarEspaco() {
-        ambienteLabels = new JLabel[LINHAS][LINHAS];
+        ambiente = new JLabel[LINHAS][COLUNAS];
         for (int i = 0; i < LINHAS; i++) {
-            for (int j = 0; j < LINHAS; j++) {
-                ambienteLabels[i][j] = new JLabel(chaoLimpoIcon);
-                ambienteLabels[i][j].setPreferredSize(new Dimension(80, 80));
-                ambienteLabels[i][j].setHorizontalAlignment(JLabel.CENTER);
-                ambienteLabels[i][j].setVerticalAlignment(JLabel.CENTER);
-                ambienteLabels[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                espacoPanel.add(ambienteLabels[i][j]);
+            for (int j = 0; j < COLUNAS; j++) {
+                ambiente[i][j] = new JLabel(chaoLimpoIcon);
+                ambiente[i][j].setPreferredSize(new Dimension(80, 80));
+                ambiente[i][j].setHorizontalAlignment(JLabel.CENTER);
+                ambiente[i][j].setVerticalAlignment(JLabel.CENTER);
+                ambiente[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                espacoPanel.add(ambiente[i][j]);
             }
         }
     }
 
     public void colocar(int x, int y, ImageIcon imagem) {
-        ambienteLabels[x][y].setIcon(imagem);
+        ambiente[x][y].removeAll();
+        ambiente[x][y].setIcon(imagem);
+    }
+
+    public JPanel getEspacoPanel() {
+        return espacoPanel;
+    }
+
+    public ImageIcon getChaoLimpoIcon() {
+        return chaoLimpoIcon;
+    }
+
+    public JLabel[][] getAmbiente() {
+        return ambiente;
     }
 
     public void montaFrame(String local, JPanel panel) {
@@ -55,6 +69,12 @@ public class Tela extends JFrame {
         return sujeiraIcon;
     }
 
+    public int getLinhas(){
+        return LINHAS;
+    }
+    public int getColunas(){
+        return COLUNAS;
+    }
     public int getLimiteDeIndex() {
         if(LINHAS > COLUNAS)
             return LINHAS;

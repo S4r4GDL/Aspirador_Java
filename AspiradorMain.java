@@ -9,7 +9,8 @@ public class AspiradorMain {
           Tela tela = new Tela();
           Sujador sujador = new Sujador();
           sujador.sujar(tela);
-          Aspirador aspirador = new Aspirador();
+          Aspirador aspirador = Aspirador.getAspirador();
+          aspirador.ligar(tela);
     }
 
 }
