@@ -6,8 +6,8 @@ public class Tela extends JFrame {
     private static final int COLUNAS = 4;
 
 
-    private static final int LINHAS = 5;
-    JPanel espacoPanel;
+    private static final int LINHAS = 7;
+    JPanel espacoPanel, controlePanel;
 
     ImageIcon sujeiraIcon = new ImageIcon("sujeira.png");
     ImageIcon chaoLimpoIcon = new ImageIcon("chaoLimpo.png");
@@ -15,12 +15,22 @@ public class Tela extends JFrame {
     JLabel[][] ambiente;
 
     public Tela() throws IOException {
+        setTitle("Aspirador");
         setLayout(new BorderLayout());
         espacoPanel = new JPanel(new GridLayout(LINHAS, LINHAS));
         criarEspaco();
-        montaFrame("West", espacoPanel);
+        criarControle();
+        montaFrame("West", espacoPanel, "Center", controlePanel);
 
         mostraTela();
+    }
+
+    private void criarControle() {
+        controlePanel = new JPanel(new BorderLayout());
+        JLabel label;
+        label = new JLabel(new ImageIcon("controles1.png"));
+        controlePanel.add(label);
+
     }
 
     public void criarEspaco() {
@@ -28,7 +38,7 @@ public class Tela extends JFrame {
         for (int i = 0; i < LINHAS; i++) {
             for (int j = 0; j < COLUNAS; j++) {
                 ambiente[i][j] = new JLabel(chaoLimpoIcon);
-                ambiente[i][j].setPreferredSize(new Dimension(80, 80));
+                ambiente[i][j].setPreferredSize(new Dimension(100, 120));
                 ambiente[i][j].setHorizontalAlignment(JLabel.CENTER);
                 ambiente[i][j].setVerticalAlignment(JLabel.CENTER);
                 ambiente[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -54,14 +64,16 @@ public class Tela extends JFrame {
         return ambiente;
     }
 
-    public void montaFrame(String local, JPanel panel) {
-        getContentPane().add(local, panel);
+    public void montaFrame(String local1, JPanel panel1, String local2, JPanel panel2) {
+        getContentPane().add(local1, panel1);
+        getContentPane().add(local2, panel2);
     }
 
     public void mostraTela() {
-        setSize(800, 300);
+        setSize(800, 446);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setResizable(false);
         setVisible(true);
     }
 
