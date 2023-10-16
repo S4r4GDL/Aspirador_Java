@@ -7,7 +7,7 @@ public class Tela extends JFrame {
 
 
     private static final int LINHAS = 4;
-    JPanel espacoPanel, controlePanel;
+    JPanel espacoPanel, controlePanel, bannerAsp;
 
     ImageIcon sujeiraIcon = new ImageIcon("sujeira.png");
     ImageIcon chaoLimpoIcon = new ImageIcon("chaoLimpo.png");
@@ -20,11 +20,17 @@ public class Tela extends JFrame {
         espacoPanel = new JPanel(new GridLayout(LINHAS, LINHAS));
         criarEspaco();
         criarControle();
-        montaFrame("West", espacoPanel, "Center", controlePanel);
-
+        montaFrame("West", espacoPanel, "Center", controlePanel, "North", banner());
         mostraTela();
     }
 
+    public Component banner(){
+
+        bannerAsp = new JPanel();
+        bannerAsp.setLayout(new BorderLayout());
+        return bannerAsp.add("North", new JLabel(new ImageIcon("bannerAsp.png")));
+
+    }
     private void criarControle() {
         controlePanel = new JPanel(new BorderLayout());
         JLabel label;
@@ -38,6 +44,7 @@ public class Tela extends JFrame {
         label = new JLabel(controleIcon);
         controlePanel.removeAll();
         controlePanel.add(label);
+        controlePanel.setBackground(Color.WHITE);
     }
 
     public void criarEspaco() {
@@ -71,13 +78,14 @@ public class Tela extends JFrame {
         return ambiente;
     }
 
-    public void montaFrame(String local1, JPanel panel1, String local2, JPanel panel2) {
+    public void montaFrame(String local1, JPanel panel1, String local2, JPanel panel2, String local3, Component panel3) {
         getContentPane().add(local1, panel1);
         getContentPane().add(local2, panel2);
+        getContentPane().add(local3, panel3);
     }
 
     public void mostraTela() {
-        setSize(800, 446);
+        setSize(800, 530);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);

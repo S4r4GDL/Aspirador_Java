@@ -52,7 +52,7 @@ public class Aspirador {
         obsevador.atualizarAcao(5);
         ImageIcon novo = girar(direcao);
         ambiente[x][y].setIcon(novo);
-        Thread.sleep(30);
+        Thread.sleep(25);
 
         switch (direcao){
             case 1:
