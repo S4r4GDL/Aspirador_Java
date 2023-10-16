@@ -5,7 +5,7 @@ public class AspiradorMain {
 
 
 
-        public static void main(String[] args) throws IOException {
+        public static void main(String[] args) throws IOException, InterruptedException {
           Tela tela = new Tela();
           Sujador sujador = new Sujador();
           sujador.sujar(tela);

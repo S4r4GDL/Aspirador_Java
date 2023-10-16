@@ -3,9 +3,16 @@ import java.util.Random;
 
 public class Aspirador {
     private static Aspirador aspirador;
-    private ImageIcon aspiradorIcon = new ImageIcon("aspiradorSul.png");
+    static ImageIcon anterior;
+    ObservaControles obsevador;
+    private static Localizacao localizacao;
+    private ImageIcon aspiradorIcon;
+    private Tela tela;
 
     private Aspirador() {
+        obsevador = new ObservaControles(this);
+        localizacao = new Localizacao();
+        aspiradorIcon = new ImageIcon("aspiradorSul.png");
     }
 
     public static Aspirador getAspirador() {
@@ -14,13 +21,73 @@ public class Aspirador {
         return aspirador;
     }
 
-    public void mover(int x, int y, ImageIcon novo,  JLabel[][] ambiente) {
-        ambiente[x][y].setIcon(novo);
+    public Tela getTela() {
+        return tela;
     }
 
-    public ImageIcon girar() {
+    public static class Localizacao{
+        int x;
+        int y;
+
+        public int getX() {
+            return x;
+        }
+
+        public void setX(int x) {
+            this.x = x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public void setY(int y) {
+            this.y = y;
+        }
+    }
+
+    public void mover(int x, int y,JLabel[][] ambiente) throws InterruptedException {
+
+        int direcao = randomizar(1,5);
+        obsevador.atualizarAcao(5);
+        ImageIcon novo = girar(direcao);
+        ambiente[x][y].setIcon(novo);
+        Thread.sleep(30);
+
+        switch (direcao){
+            case 1:
+                x--;
+            break;
+            case 2:
+                y++;
+            break;
+            case 3:
+                y--;
+                break;
+            default:
+                x++;
+                break;
+        }
+        obsevador.atualizarAcao(1);
+        if(sensorParede(x, y, ambiente))
+        {
+            obsevador.atualizarAcao(3);
+            anterior = (ImageIcon) ambiente[x][y].getIcon();
+            ambiente[x][y].setIcon(novo);
+            localizacao.setX(x);
+            localizacao.setY(y);
+
+        }
+
+}
+
+    private static int randomizar(int origem, int limite) {
         Random aleatorio = new Random();
-        int direcao = aleatorio.nextInt(1, 5);
+        int direcao = aleatorio.nextInt(origem, limite);
+        return direcao;
+    }
+
+    public ImageIcon girar(int direcao){
         switch (direcao) {
             case 1:
                 return new ImageIcon("aspiradorNorte.png");
@@ -33,8 +100,9 @@ public class Aspirador {
         }
     }
 
-    public Boolean sensorSujeira(JLabel local, ImageIcon sujeira) {
-        return local.getIcon().equals(sujeira);
+    public Boolean sensorSujeira(ImageIcon local, ImageIcon sujeira) {
+
+        return local.equals(sujeira);
     }
 
     public ImageIcon getAspiradorIcon() {
@@ -42,68 +110,47 @@ public class Aspirador {
     }
 
     public Boolean sensorParede(int x, int y, JLabel[][] espaco) {
-        return !espaco[x][y].isValid();
+
+        try{
+            JLabel teste = espaco[x][y];
+            return true;
+        }catch (ArrayIndexOutOfBoundsException e){
+            return false;
+        }
+
     }
 
-    public void ligar(Tela tela) {
+    public void ligar(Tela tela) throws InterruptedException {
         ImageIcon limpo = tela.getChaoLimpoIcon();
         ImageIcon sujo = tela.getSujeiraIcon();
         int linhas = tela.getLinhas();
         int colunas = tela.getColunas();
-        limpar(tela, linhas, colunas, limpo, sujo);
+        localizacao.setX(0);
+        localizacao.setY(0);
+        this.tela = tela;
+        limpar(linhas, colunas, limpo, sujo);
     }
 
-    private void limpar(Tela tela, int linhas, int colunas, ImageIcon limpo, ImageIcon sujo) {
+    private void limpar(int linhas, int colunas, ImageIcon limpo, ImageIcon sujo) throws InterruptedException {
+
         JLabel[][] ambiente = tela.getAmbiente();
-        int sujeiras = mapear(linhas, colunas, ambiente, sujo);
-        int i = 0, j = 0;
+        anterior = (ImageIcon) ambiente[0][0].getIcon();
         tela.colocar(0, 0, aspiradorIcon);
-        while (sujeiras > 0) {
-            int movimentar = 0;
-            while(movimentar==0)
+        while (mapear(linhas, colunas, ambiente, sujo) > 0) {
+
+            int  i = localizacao.getX(), j= localizacao.getY();
+            mover(i, j, ambiente);
+            if(sensorSujeira(anterior, sujo))
             {
-                if (sensorSujeira(ambiente[i][j], sujo) || sensorSujeira(ambiente[i][j], aspiradorIcon)) {
-                    tela.colocar(i, j, limpo);
-                    sujeiras--;
-                }
-
-                aspiradorIcon = girar();
-                if(!sensorParede(i, j+1, ambiente)){
-                    j++;
-                    movimentar++;
-                }
-                else if(!sensorParede(i+1, j, ambiente)){
-                    i++;
-                    movimentar++;
-
-                } else if (!sensorParede(i+1, 0, ambiente)) {
-                    j=0;
-                    i++;
-                    movimentar++;
-                }
-                else if (!sensorParede(0, j+1, ambiente)) {
-                    i=0;
-                    j++;
-                    movimentar++;
-                }
-                else{
-                    aspiradorIcon = girar();
-                }
-                if(movimentar > 0){
-                    mover(i, j, aspiradorIcon, ambiente);
-                }
-
-
-
-
+                obsevador.atualizarAcao(2);
+                obsevador.atualizarAcao(4);
             }
+
+            tela.colocar(i, j, limpo);
+            Thread.sleep(450);
         }
     }
 
-    private int sortearAcao() {
-        Random aleatorio = new Random();
-        return aleatorio.nextInt(2);
-    }
 
     private int mapear(int x, int y, JLabel[][] ambiente, ImageIcon sujo) {
         int sujeiras = 0;
@@ -111,7 +158,7 @@ public class Aspirador {
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 local = ambiente[i][j];
-                if (sensorSujeira(local, sujo))
+                if (sensorSujeira((ImageIcon) local.getIcon(), sujo))
                     sujeiras++;
             }
         }

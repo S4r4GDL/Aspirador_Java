@@ -3,15 +3,15 @@ import java.awt.*;
 import java.io.IOException;
 
 public class Tela extends JFrame {
-    private static final int COLUNAS = 4;
+    private static final int COLUNAS = 5;
 
 
-    private static final int LINHAS = 7;
+    private static final int LINHAS = 4;
     JPanel espacoPanel, controlePanel;
 
     ImageIcon sujeiraIcon = new ImageIcon("sujeira.png");
     ImageIcon chaoLimpoIcon = new ImageIcon("chaoLimpo.png");
-
+    Icon controleIcon;
     JLabel[][] ambiente;
 
     public Tela() throws IOException {
@@ -28,9 +28,16 @@ public class Tela extends JFrame {
     private void criarControle() {
         controlePanel = new JPanel(new BorderLayout());
         JLabel label;
-        label = new JLabel(new ImageIcon("controles1.png"));
+        label = new JLabel(controleIcon = new ImageIcon("controles1.png"));
         controlePanel.add(label);
 
+    }
+    public void mudarControle(int controle){
+        JLabel label;
+        controleIcon = new ImageIcon ( "controles" + controle + ".png");
+        label = new JLabel(controleIcon);
+        controlePanel.removeAll();
+        controlePanel.add(label);
     }
 
     public void criarEspaco() {
